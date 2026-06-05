@@ -2,6 +2,8 @@
 
 Un système de monitoring système en temps réel, conçu par **Boulaye (darkbd11)**. Ce projet permet de surveiller facilement les ressources (CPU, RAM, Disque) et l'état de serveurs à distance grâce à une API performante et un dashboard interactif.
 
+![Dashboard Preview](images/dashboard.png)
+
 ## 🏗️ Architecture
 
 Le projet est divisé en deux composants principaux, conteneurisés via Docker :
