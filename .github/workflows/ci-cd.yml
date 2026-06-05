@@ -43,8 +43,31 @@ jobs:
         env:
           API_KEY: ci-test-key
 
-  build-and-deploy:
+  build:
     needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build API image (Dry Run)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: api/Dockerfile
+          push: false
+          tags: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}:latest
+
+      - name: Build Dashboard image (Dry Run)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: dashboard/Dockerfile
+          push: false
+          tags: ${{ env.REGISTRY }}/${{ env.DASHBOARD_IMAGE_NAME }}:latest
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     # Ne se lance que sur la branche main
     if: github.ref == 'refs/heads/main'
