@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: devops_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: dashboard/Dockerfile
+    container_name: devops_dashboard
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      # L'API est joinable via son nom de service "api" sur le réseau Docker interne
+      - API_BASE_URL=http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
